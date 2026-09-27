@@ -152,7 +152,8 @@ export function ThreatModelPage() {
                 settings have no contract equivalents. Burning is unaffected — operator and depositor shares both burn
                 through the contract (the route proven for LLP) — but while a pool is active Lighter keeps the operator
                 above a minimum share rate, so an operator&apos;s full exit needs the API-only freeze first. Nothing is
-                trapped; the shares stay burnable. Only the final step of an active-pool wind-down is API-bound.
+                trapped — the shares stay burnable (down to the minimum-rate floor while the pool is active). Only the
+                final step of an active-pool wind-down is API-bound.
               </li>
             </ul>
           </div>
