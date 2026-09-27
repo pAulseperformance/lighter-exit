@@ -148,9 +148,11 @@ export function ThreatModelPage() {
                 trust to the API for that long.
               </li>
               <li>
-                <span className="font-medium text-ink">Pool management.</span> Freezing a pool and similar operator
-                actions have no contract equivalents. They move no money, but a pool operator who loses API access
-                cannot fully wind down a public pool.
+                <span className="font-medium text-ink">Pool management.</span> Freezing a pool and changing its
+                settings have no contract equivalents. Burning is unaffected — operator and depositor shares both burn
+                through the contract (the route proven for LLP) — but while a pool is active Lighter keeps the operator
+                above a minimum share rate, so an operator&apos;s full exit needs the API-only freeze first. Nothing is
+                trapped; the shares stay burnable. Only the final step of an active-pool wind-down is API-bound.
               </li>
             </ul>
           </div>
