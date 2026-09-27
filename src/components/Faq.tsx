@@ -33,7 +33,7 @@ const FAQ_ITEMS: { q: string; a: ReactNode }[] = [
   },
   {
     q: 'When does it use Ethereum instead of the API?',
-    a: 'Every action is first sent to the Lighter API, which is free and executes in seconds. If the API answers that your account is not allowed to use it (or cannot be reached at all), the same action is sent as an Ethereum transaction to the Lighter contract, which costs gas and is picked up by Lighter within a couple of minutes. Any other rejection, for example "insufficient available shares", is shown as is because it would fail on either route. You can also force Ethereum-only mode in step 0. Unstaking and freezing a pool exist only on the API.',
+    a: 'Every action is first sent to the Lighter API, which is free and executes in seconds. If the API answers that your account is not allowed to use it (or cannot be reached at all), the same action is sent as an Ethereum transaction to the Lighter contract, which costs gas and is picked up by Lighter within a couple of minutes. Any other rejection, for example "insufficient available shares", is shown as is because it would fail on either route. You can also force Ethereum-only mode in step 0. Unstaking and freezing a pool exist only on the API — verified: the contract\'s burnShares takes public-pool indices only, so a staking burn is rejected outright.',
   },
   {
     q: 'How long does each step take?',
@@ -75,6 +75,16 @@ const FAQ_ITEMS: { q: string; a: ReactNode }[] = [
         by Lighter&apos;s own signer (the same WebAssembly module the Lighter app uses) with the key derived above, and
         every one of them is listed on Lighter&apos;s explorer with a link from this page. The page holds no keys and sends
         nothing without your action.
+      </>
+    ),
+  },
+  {
+    q: 'Where can I read the threat model?',
+    a: (
+      <>
+        This tool ships with one: <a href="#threat-model" className={LINK_CLASSNAME}>the threat model</a> lists exactly
+        which money locations can be exited through the Ethereum contract alone, which cannot, and the residual risks —
+        each row verified against mainnet.
       </>
     ),
   },

@@ -6,7 +6,7 @@ import { accountKey } from '../../hooks/useLighterData'
 import { useSigningKeys } from '../../hooks/useSigningKeys'
 import cn from '../../lib/cn'
 import { TX_TYPE, UNSTAKE_PERIOD_DAYS } from '../../lib/config'
-import { formatAmount, formatCountdown, formatDateTime, formatUsd } from '../../lib/format'
+import { formatAmount, formatCountdown, formatDateTime } from '../../lib/format'
 import { BTN_PRIMARY_CLASSNAME, BTN_ROW_CLASSNAME, BTN_SECONDARY_CLASSNAME, LABEL_CLASSNAME } from '../../lib/recipes'
 import { signUnstakeAssets } from '../../lib/signer'
 import { toMillis } from '../../lib/time'
@@ -47,6 +47,9 @@ export function UnstakeStep({
   const keyReady = mode === 'api' && keys[accountIndex]?.stage === 'registered'
   const anyInFlight = stakes.some((s) => isInFlight(actions[s.id]))
 
+  // Unstake is API-only: the contract's burnShares takes public-pool indices
+  // only (step 3), so there is no Ethereum route for staking shares.
+  // Tested live 2026-09-27: a staking-index burn was rejected as 21200.
   const request = (s: PoolShareItem): ExitActionRequest => ({
     id: s.id,
     label: `Unstake from ${s.poolName}`,
@@ -78,7 +81,8 @@ export function UnstakeStep({
         <>
           Unstaking only exists as an API request, signed with the key from step 0. Unlocked assets land in this
           account&apos;s spot balance after the {UNSTAKE_PERIOD_DAYS}-day unstaking period and can then be withdrawn in
-          step 5.
+          step 5. This is the one step the Ethereum contract cannot do — its burnShares accepts public pools only
+          (step 3).
         </>
       }
       state={stepState}
@@ -94,7 +98,8 @@ export function UnstakeStep({
                   <>
                     <th>Pool</th>
                     <th className="text-right">Shares</th>
-                    <th className="text-right">Principal</th>
+                    {/* principal_amount on a staking row is LIT-denominated — never render it as USD */}
+                    <th className="text-right">Staked</th>
                     <th className="text-right">Status</th>
                     <th />
                   </>
@@ -110,7 +115,7 @@ export function UnstakeStep({
                         <span className="ml-2 text-2xs text-meta">#{s.poolIndex}</span>
                       </td>
                       <td className="text-right font-mono tabular-nums text-ink">{formatAmount(s.shares.toString(), 0)}</td>
-                      <td className="text-right font-mono tabular-nums text-dim">{formatUsd(s.principal)}</td>
+                      <td className="text-right font-mono tabular-nums text-dim">{formatAmount(s.principal, 4)} LIT</td>
                       <td className="text-right">
                         <StatusPill state={state} />
                       </td>
@@ -144,7 +149,9 @@ export function UnstakeStep({
                   <span className="text-sm text-faint">{reason}</span>
                 ) : !keyReady ? (
                   <span className="text-sm text-faint">
-                    {mode === 'l1' ? 'Switch back to the API in step 0 to unstake.' : 'Unlock API signing in step 0 first.'}
+                    {mode === 'l1'
+                      ? "Ethereum-only mode cannot unstake — the contract's burnShares accepts public pools only. Switch back to the API in step 0."
+                      : 'Unlock API signing in step 0 first.'}
                   </span>
                 ) : null}
               </div>
