@@ -59,6 +59,9 @@ export function ExitPage() {
       <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t-[0.5px] border-line pt-5 text-sm text-faint">
         <p>Lighter · Self-service exit</p>
         <p className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <a href="#threat-model" className={LINK_CLASSNAME}>
+            Threat model
+          </a>
           <a
             href="https://github.com/techcobain/lighter_exit"
             target="_blank"

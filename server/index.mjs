@@ -175,6 +175,9 @@ const server = http.createServer(async (req, res) => {
   }
 })
 
-server.listen(PORT, () => {
-  console.log(`lighter-exit listening on :${PORT} (proxy → ${UPSTREAM})`)
+// Bind localhost only: the Tailscale door (serve --https=8787) proxies to
+// localhost, and a wildcard bind collides with Tailscale's own listener on
+// the tailnet addresses when both end up on the same port.
+server.listen(PORT, '127.0.0.1', () => {
+  console.log(`lighter-exit listening on 127.0.0.1:${PORT} (proxy → ${UPSTREAM})`)
 })
