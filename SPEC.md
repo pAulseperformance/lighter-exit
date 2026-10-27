@@ -9,7 +9,7 @@
 
 - Own repository: `/Users/v99/Projects/lighter-exit`
 - Own deploy target: none, and here is why: <fill this in or the gate stays open>
-- Serves users outside the host app: no
+- Serves users outside the host app: unconfirmed
 
 ## Gates
 
