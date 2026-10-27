@@ -1,0 +1,12 @@
+#!/bin/sh
+# HALT: stop what this repo serves. One command, no arguments, safe to run twice.
+#
+# Created 2026-10-27 by the repo docs pass.
+#
+# This repo deploys static files, so there is no process to stop and no daemon to boot out.
+# The way back is a redeploy of the previous commit.
+#
+# The rest (what dies, who hears, the way back) is in RUNBOOK.md beside this file, because a stop
+# procedure that needs three paragraphs read first is read at the wrong moment.
+set -e
+echo "nothing runs unattended in this repo; see RUNBOOK.md"
