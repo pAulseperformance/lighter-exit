@@ -1,5 +1,7 @@
 # SPEC: lighter-exit
 
+**Last verified:** 2026-10-27 by bash check.sh
+
 > Created 2026-10-27 by `spec_gate.py scaffold`. Scaffolded, not yet confirmed by the owner: the
 > placement below is DETECTED, not decided, and "What it is" is empty until somebody writes it.
 
