@@ -3,9 +3,20 @@ import { getAddress } from 'viem'
 const env = import.meta.env
 
 /** Lighter's zkLighter contract on Ethereum mainnet (EIP-1967 proxy). */
+// Priority transactions (createOrder, cancelAllOrders, withdraw, changePubKey,
+// burnShares) moved to L1CoreMessaging on 2026-11-08. Deposits, the pending-balance
+// claim and every read stay on ZkLighter, so both addresses are carried.
+export const L1_CORE_MESSAGING = getAddress(
+  (env.VITE_L1_CORE_MESSAGING as string | undefined)?.trim() || '0x183ef7195d443a3dA7EC1d7003BaCa1ff490757D',
+)
+
+export const ZKLIGHTER = getAddress(
+  (env.VITE_ZKLIGHTER as string | undefined)?.trim() || '0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7',
+)
+
 export const LIGHTER_CONTRACT = getAddress(
   (env.VITE_LIGHTER_CONTRACT as string | undefined)?.trim() ||
-    '0x3B4D794a66304F130a4Db8F2551B0070dfCf5ca7',
+    '0x183ef7195d443a3dA7EC1d7003BaCa1ff490757D',
 )
 
 /** Lighter L2 chain id used when hashing L2 transactions (304 = mainnet). */
