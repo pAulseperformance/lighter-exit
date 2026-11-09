@@ -11,9 +11,10 @@ import { mainnet } from 'wagmi/chains'
 import { useAccount, usePublicClient, useSwitchChain, useWriteContract } from 'wagmi'
 
 import { isPreview, previewApply } from '../dev/preview'
-import { L1_CORE_MESSAGING, L1_TRACK_TIMEOUT_MS } from '../lib/config'
+import { L1_TRACK_TIMEOUT_MS } from '../lib/config'
 import { lighterAbi } from '../lib/contract'
 import { describeError } from '../lib/format'
+import { l1Target } from '../lib/l1Targets'
 import { fetchTxFromL1Hash, isExecuted, l2ExecutionError } from '../lib/lighterApi'
 
 import { useActions } from './useActions'
@@ -103,7 +104,9 @@ export function useL1Action() {
         }
         update(id, { status: 'signing', message: 'Confirm in your wallet' })
         const txHash = await writeContractAsync({
-          address: L1_CORE_MESSAGING,
+          // The surface is split: the pending-balance claim lives on ZkLighter and the
+          // priority transactions on L1CoreMessaging. A single target broke the claim.
+          address: l1Target(req.functionName),
           abi: lighterAbi,
           functionName: req.functionName,
           args: req.args,
