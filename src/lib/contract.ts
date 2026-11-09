@@ -6,7 +6,7 @@ import { parseAbi } from 'viem'
 // and eth_call simulations (withdraw, cancelAllOrders, getPendingBalance).
 export const lighterAbi = parseAbi([
   // Reduce-only market order; the price is a bound, not a limit to rest at.
-  'function createOrder(uint48 _accountIndex, uint16 _marketIndex, uint48 _baseAmount, uint32 _price, uint8 _isAsk, uint8 _orderType)',
+  'function createOrder(uint48 _accountIndex, uint64 _marketIndex, uint48 _baseAmount, uint32 _price, uint8 _isAsk, uint8 _orderType)',
   'function cancelAllOrders(uint48 _accountIndex)',
   'function burnShares(uint48 _accountIndex, uint48 _publicPoolIndex, uint64 _shareAmount)',
   // routeType: 0 = perps collateral, 1 = spot balance. Amount in the asset's L2 decimals.

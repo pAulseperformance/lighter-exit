@@ -101,7 +101,9 @@ export function ClosePositionsStep({
         functionName: 'createOrder',
         args: [
           accountIndex,
-          p.marketId,
+          // The market index widened from uint16 to uint64 in the 2026-11-08 upgrade,
+          // so it is passed as a bigint; a number would fail the ABI encoder.
+          BigInt(p.marketId),
           Number(WHOLE_POSITION),
           Number(price),
           p.isAsk === 1 ? ORDER_SIDE_ASK : ORDER_SIDE_BID,

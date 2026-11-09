@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { LIGHTER_CONTRACT } from '../lib/config'
+import { L1_CORE_MESSAGING } from '../lib/config'
 import { LABEL_CLASSNAME, LINK_CLASSNAME, PAGE_TITLE_CLASSNAME } from '../lib/recipes'
 
 import { Section } from './Section'
@@ -240,7 +240,7 @@ export function ThreatModelPage() {
         <p>
           Contract{' '}
           <a
-            href={`https://etherscan.io/address/${LIGHTER_CONTRACT}`}
+            href={`https://etherscan.io/address/${L1_CORE_MESSAGING}`}
             target="_blank"
             rel="noreferrer"
             className={`${LINK_CLASSNAME} font-mono`}
