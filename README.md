@@ -11,6 +11,32 @@ account (blacklist code 52001, permission code 23100, a 403/451 edge block, or
 the API being unreachable) the same action is sent to the Lighter contract on
 Ethereum instead. The user can also force Ethereum-only mode.
 
+## The 2026-11-08 contract split
+
+Lighter upgraded its Ethereum contracts on Sunday 2026-11-08 at 13:00 UTC and split one contract
+into two. This app was written against the single pre-upgrade contract, so its priority-transaction
+path silently stopped working: the calls still encode, but they revert on-chain.
+
+| contract | carries | where it is used here |
+|---|---|---|
+| `L1CoreMessaging` | `createOrder`, `cancelAllOrders`, `withdraw`, `changePubKey`, `burnShares` | every priority transaction (the Ethereum fallback and forced L1 mode) |
+| `ZkLighter` | `deposit`, `withdrawPendingBalance`, all view reads | the pending-balance claim and every read |
+
+Two changes matter for correctness:
+
+- **The `createOrder` market index widened from `uint16` to `uint64`.** The old signature still
+  compiles and still encodes, but it produces the retired selector `0x3c40c676` and reverts. The
+  live selector is `0x3873d062`, and the market index must be passed as a `bigint`.
+- **`withdrawPendingBalance` did not move.** It is absent from `L1CoreMessaging`, so the claim step
+  stays on `ZkLighter` while the withdrawal step goes to the messaging contract. Both addresses
+  are carried in `src/lib/config.ts` and `tests/contract-upgrade.test.ts` pins the split, the
+  selector widths and the encoding, so a later ABI edit that widens or narrows an argument fails a
+  test instead of failing on-chain.
+
+Verified against mainnet on 2026-11-09: `L1CoreMessaging` dispatches `withdraw(account,1,0,1)` and
+`cancelAllOrders(account)` for a real account holder, and every one of those selectors is absent
+from `ZkLighter`. Follow `https://t.me/lighter_api_updates` for the next one.
+
 ## How it works
 
 | Step | API route (default) | Ethereum fallback |
