@@ -18,7 +18,10 @@ describe('post-upgrade contract wiring', () => {
     const data = encodeFunctionData({
       abi: lighterAbi,
       functionName: 'createOrder',
-      args: [250552n, 111n, 0n, 0, 0, 3],
+      // uint48 arguments are typed as numbers by viem; only the widened uint64
+      // market index is a bigint. Passing bigints everywhere fails `tsc`, and
+      // passing a bigint market index is what the retired encoder would refuse.
+      args: [250552, 111n, 0, 0, 0, 3],
     })
     // keccak('createOrder(uint48,uint64,uint48,uint32,uint8,uint8)')[0:4]
     expect(data.slice(0, 10)).toBe('0x3873d062')
@@ -29,13 +32,13 @@ describe('post-upgrade contract wiring', () => {
     const withdraw = encodeFunctionData({
       abi: lighterAbi,
       functionName: 'withdraw',
-      args: [250552n, 1, 0, 1n],
+      args: [250552, 1, 0, 1n],
     })
     expect(withdraw.slice(0, 10)).toBe('0xd20191bd')
     const cancel = encodeFunctionData({
       abi: lighterAbi,
       functionName: 'cancelAllOrders',
-      args: [250552n],
+      args: [250552],
     })
     expect(cancel.slice(0, 10)).toBe('0xa4b6f756')
     // the pending-balance claim stays on ZkLighter, and it must still encode

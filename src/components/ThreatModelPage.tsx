@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { L1_CORE_MESSAGING } from '../lib/config'
+import { L1_CORE_MESSAGING, ZKLIGHTER } from '../lib/config'
 import { LABEL_CLASSNAME, LINK_CLASSNAME, PAGE_TITLE_CLASSNAME } from '../lib/recipes'
 
 import { Section } from './Section'
@@ -236,16 +236,25 @@ export function ThreatModelPage() {
         </Section>
       </main>
       <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-t-[0.5px] border-line pt-5 text-sm text-faint">
-        <p>Last verified 2026-09-27 · Ethereum mainnet</p>
+        <p>Last verified 2026-09-27 · contract split 2026-11-09 · Ethereum mainnet</p>
         <p>
-          Contract{' '}
+          Priority transactions{' '}
           <a
             href={`https://etherscan.io/address/${L1_CORE_MESSAGING}`}
             target="_blank"
             rel="noreferrer"
             className={`${LINK_CLASSNAME} font-mono`}
           >
-            0x3B4D…5ca7
+            {L1_CORE_MESSAGING.slice(0, 6)}…{L1_CORE_MESSAGING.slice(-4)}
+          </a>
+          {' · '}
+          <a
+            href={`https://etherscan.io/address/${ZKLIGHTER}`}
+            target="_blank"
+            rel="noreferrer"
+            className={`${LINK_CLASSNAME} font-mono`}
+          >
+            {ZKLIGHTER.slice(0, 6)}…{ZKLIGHTER.slice(-4)}
           </a>
         </p>
       </footer>
