@@ -1,0 +1,53 @@
+# .github/workflows/ci.yml
+#
+# THE REPO'S OWN GATE. Both commands are scripts this repo already defines in `package.json`:
+# `npm test` (`vitest run`) and `npm run typecheck` (`tsc --noEmit`). Nothing is invented here, so
+# the job grades what a person runs at a desk.
+#
+# WHY IT RUNS ON THE DESK RUNNER. A hosted job on this account is refused at the spending limit and
+# dies in three seconds with zero steps, which reads as a broken workflow. A self-hosted runner is
+# not billed, so the job runs. The `desk` label keeps it on this machine, where `desk-lighter-exit`
+# is registered.
+#
+# NO SIBLING CHECKOUT HERE. Unlike the zpe-* apps, this repo does not link `zpe-kit` as
+# `file:../zpe-kit`: its dependencies are all public, so a bare checkout installs.
+#
+# IT DOES NOT DEPLOY. A green suite must not put a build on a route without anyone asking it to.
+
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: [self-hosted, desk]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      # The major the `engines` field names (`>=22`), not "latest": a new Node major is a change to
+      # the thing being tested.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: install
+        run: npm ci
+
+      - name: the suite
+        run: npm test
+
+      - name: typecheck
+        run: npm run typecheck
